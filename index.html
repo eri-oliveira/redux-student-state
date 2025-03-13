@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redux - Student State</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <script src="./redux.min.js"></script>
+    <script src="./immer.umd.production.min.js"></script>
+  </head>
+
+  <body>
+    <div class="page">
+      <div class="student-container">
+        <div>
+          <h1 class="titles" id="student-name">Olá</h1>
+          <p id="student-email">E-mail:</p>
+          <p id="student-access-days">Acesso até:</p>
+        </div>
+
+        <div>
+          <h1 class="titles">Cursos matriculados</h1>
+          <div class="courses"></div>
+        </div>
+      </div>
+
+      <div class="redux-container">
+        <h1 class="titles">Painél Redux</h1>
+
+        <button id="increase-acess" class="redux-button">
+          Incrementar Acesso
+        </button>
+        <button id="decrease-acess" class="redux-button">Reduzir Acesso</button>
+        <button id="change-email" class="redux-button">Modificar E-mail</button>
+        <button id="complete-class" class="redux-button">Completar Aula</button>
+        <button id="complete-course" class="redux-button">
+          Completar Curso
+        </button>
+        <button id="reset-course" class="redux-button">Resetar Curso</button>
+      </div>
+    </div>
+
+    <script type="module">
+      import store from "./store/index.js";
+      import {
+        increaseTime,
+        decreaseTime,
+        modifyEmail,
+      } from "./store/ducks/students.js";
+      import {
+        completeClass,
+        completeCourse,
+        resetCourse,
+      } from "./store/ducks/classes.js";
+
+      function updateTextContent(id, text) {
+        const element = document.getElementById(id);
+
+        if (element) {
+          element.textContent = text;
+        }
+      }
+
+      function render() {
+        const state = store.getState();
+
+        const student = state.student;
+
+        updateTextContent("student-name", `Olá, ${student.name}!`);
+        updateTextContent("student-email", `E-mail: ${student.email}.`);
+
+        const access = new Date();
+        access.setDate(access.getDate() + student.daysLeft);
+        updateTextContent(
+          "student-access-days",
+          `Acesso até: ${access.toLocaleDateString("pt-br")}.`
+        );
+
+        const courses = state.classes;
+
+        const coursesContainer = document.querySelector(".courses");
+        coursesContainer.innerHTML = "";
+
+        for (const course of courses) {
+          const courseElement = document.createElement("div");
+          courseElement.innerHTML = `
+            <div class="course-card">
+              <div class="course-header">
+                <p class="course-title">${course.name}</p>
+                <p class="course-id">(${course.id})</p>
+              </div>
+              <p class="course-body">Finalizado: ${
+                course.isCompleted ? "Sim" : "Nao"
+              }</p>
+            </div
+            `;
+
+          coursesContainer.appendChild(courseElement);
+        }
+      }
+      render();
+
+      store.subscribe(render);
+
+      document
+        .getElementById("increase-acess")
+        .addEventListener("click", () => store.dispatch(increaseTime()));
+
+      document
+        .getElementById("decrease-acess")
+        .addEventListener("click", () => store.dispatch(decreaseTime()));
+
+      document.getElementById("change-email").addEventListener("click", () => {
+        const userInput = prompt("Digite um novo email:");
+
+        const isEmail = userInput !== null && userInput.includes("@");
+
+        if (isEmail) {
+          store.dispatch(modifyEmail(userInput));
+        }
+
+        if (userInput !== null && !isEmail) alert("Insira um email válido.");
+      });
+
+      document
+        .getElementById("complete-class")
+        .addEventListener("click", () => {
+          const userInput = prompt("Digite o ID do curso:");
+
+          const courses = store.getState().classes;
+
+          const validId = courses.some((c) => c.id.toString() === userInput);
+
+          if (validId) {
+            store.dispatch(completeClass(userInput));
+          }
+
+          if (!validId) alert("Insira um ID válido.");
+        });
+
+      document
+        .getElementById("complete-course")
+        .addEventListener("click", () => store.dispatch(completeCourse()));
+
+      document
+        .getElementById("reset-course")
+        .addEventListener("click", () => store.dispatch(resetCourse()));
+    </script>
+  </body>
+</html>

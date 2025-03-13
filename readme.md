@@ -16,3 +16,7 @@ A simple project to practice Redux concepts, managing student and course class s
 - Redux
 - Redux DevTools
 - Immer
+
+## Based on
+
+This project is based on the first challenge from the [Redux course by **Origamid**](https://www.origamid.com/curso/redux-com-react).

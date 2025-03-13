@@ -1,0 +1,18 @@
+.redux-button {
+  background: #3a3a3a;
+  color: #f0f0f0;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.redux-button:hover {
+  transform: scale(1.05);
+}
+
+@media (width <= 700px) {
+  .redux-button {
+    width: 100%;
+  }
+}

@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Redux - Student State</title>
+    <link rel="icon" href="https://redux.js.org/img/redux.svg" />
     <link rel="stylesheet" href="css/styles.css" />
     <script src="./redux.min.js"></script>
     <script src="./immer.umd.production.min.js"></script>
@@ -11,7 +12,7 @@
 
   <body>
     <div class="page">
-      <div class="student-container">
+      <div class="container">
         <div>
           <h1 class="titles" id="student-name">Olá</h1>
           <p id="student-email">E-mail:</p>
@@ -24,19 +25,19 @@
         </div>
       </div>
 
-      <div class="redux-container">
+      <div class="container">
         <h1 class="titles">Painél Redux</h1>
 
-        <button id="increase-acess" class="redux-button">
-          Incrementar Acesso
-        </button>
-        <button id="decrease-acess" class="redux-button">Reduzir Acesso</button>
-        <button id="change-email" class="redux-button">Modificar E-mail</button>
         <button id="complete-class" class="redux-button">Completar Aula</button>
         <button id="complete-course" class="redux-button">
           Completar Curso
         </button>
         <button id="reset-course" class="redux-button">Resetar Curso</button>
+        <button id="increase-acess" class="redux-button">
+          Incrementar Acesso
+        </button>
+        <button id="decrease-acess" class="redux-button">Reduzir Acesso</button>
+        <button id="change-email" class="redux-button">Modificar E-mail</button>
       </div>
     </div>
 
@@ -83,16 +84,15 @@
 
         for (const course of courses) {
           const courseElement = document.createElement("div");
+          courseElement.classList.add("course-card");
           courseElement.innerHTML = `
-            <div class="course-card">
-              <div class="course-header">
-                <p class="course-title">${course.name}</p>
-                <p class="course-id">(${course.id})</p>
-              </div>
-              <p class="course-body">Finalizado: ${
-                course.isCompleted ? "Sim" : "Nao"
-              }</p>
-            </div
+            <div class="course-header">
+              <p class="course-title">${course.name}</p>
+              <p class="course-id">(${course.id})</p>
+            </div>
+            <p class="course-body">Finalizado: ${
+              course.isCompleted ? "Sim" : "Nao"
+            }</p>
             `;
 
           coursesContainer.appendChild(courseElement);
